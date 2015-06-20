@@ -96,7 +96,7 @@ public class ExcelRead {
 	public void testWritePaperless(){
 		String[] options = {"A","B","C","D","E"};
 		WritableWorkbook book = null;
-		int count = 20;
+		int count = 10;
 		
 		try {
 			WritableFont fontTitle = new WritableFont(WritableFont.ARIAL,9,WritableFont.BOLD,false,UnderlineStyle.NO_UNDERLINE,jxl.format.Colour.BLACK);  
@@ -110,27 +110,49 @@ public class ExcelRead {
 			
 			book = Workbook.createWorkbook(new File("e:/excelFile/测试.xls"));
 			WritableSheet sheet = book.createSheet("单选题", 0);
+			sheet.setColumnView(1, 30);//设置题干这一列的单元格的宽度
+			sheet.setColumnView(4, 25);//设置答案这一列的单元格的宽度
+			
 			Label number = new Label(0, 0, "序号",formatTitle);
 			Label context = new Label(1, 0, "题干",formatTitle);
-			Label option = new Label(2, 0, "选项",formatTitle);
+			Label knowledge = new Label(2, 0, "知识点",formatTitle);
+			Label option = new Label(3, 0, "选项",formatTitle);
+			Label answer = new Label(4, 0, "答案",formatTitle);
+			Label difficulty = new Label(5, 0, "难度",formatTitle);
+			Label distinciton = new Label(6, 0, "区分度",formatTitle);
 			
-			sheet.setColumnView(1, 20);
 			
 			sheet.addCell(number);
 			sheet.addCell(context);
+			sheet.addCell(knowledge);
 			sheet.addCell(option);
+			sheet.addCell(answer);
+			sheet.addCell(difficulty);
+			sheet.addCell(distinciton);
 			
-			for(int i=1;i<count+1;i++){//行
-				Number serial = new Number(0, 1+(i-1)*options.length, i);
-				Label cont = new Label(1, 1+(i-1)*options.length,"我是单选题的第"+i+"题");
-				sheet.addCell(serial);
-				sheet.addCell(cont);
+			for(int j=0;j<3*count;j++){
+				Label konw = new Label(2, options.length*j+1, "知识点"+(j/count+1)+"");
+				sheet.addCell(konw);
+				for(int i=1;i<(count+1)*3-2;i++){
+					Number serial = new Number(0, 1+(i-1)*options.length, i);
+					Label cont = new Label(1, 1+(i-1)*options.length,"我是单选题的第"+i+"题，知识点"+(j/count+1)+"");
+					sheet.addCell(serial);
+					sheet.addCell(cont);
+				}
 			}
-			
-			for(int k=0;k<(count)*options.length;k++){
-					Label opt = new Label(2, k+1, options[k%options.length]);
+				
+				for(int k=0;k<(count)*options.length*3;k++){
+					Label opt = new Label(3, k+1, options[k%options.length]);
+					if(k%options.length == 2){
+						Label ans = new Label(4, k+1, "答案是我是我就是我！！！");
+						sheet.addCell(ans);
+					}else{
+						Label ans = new Label(4, k+1, "答案不是我不是我");
+						sheet.addCell(ans);
+					}
 					sheet.addCell(opt);
-			}
+				}
+			
 			
 			book.write();
 		} catch (Exception e) {
