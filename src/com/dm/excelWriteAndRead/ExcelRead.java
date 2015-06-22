@@ -95,8 +95,10 @@ public class ExcelRead {
 	@Test
 	public void testWritePaperless(){
 		String[] options = {"A","B","C","D","E"};
+		String[] difficul ={"0","0.1","0.2","0.3"};
 		WritableWorkbook book = null;
 		int count = 10;
+		int countKonwledge = 3;
 		
 		try {
 			WritableFont fontTitle = new WritableFont(WritableFont.ARIAL,9,WritableFont.BOLD,false,UnderlineStyle.NO_UNDERLINE,jxl.format.Colour.BLACK);  
@@ -130,18 +132,23 @@ public class ExcelRead {
 			sheet.addCell(difficulty);
 			sheet.addCell(distinciton);
 			
-			for(int j=0;j<3*count;j++){
-				Label konw = new Label(2, options.length*j+1, "知识点"+(j/count+1)+"");
-				sheet.addCell(konw);
-				for(int i=1;i<(count+1)*3-2;i++){
-					Number serial = new Number(0, 1+(i-1)*options.length, i);
-					Label cont = new Label(1, 1+(i-1)*options.length,"我是单选题的第"+i+"题，知识点"+(j/count+1)+"");
-					sheet.addCell(serial);
-					sheet.addCell(cont);
+			for(int d=0;d<difficul.length*count*countKonwledge;d++){
+				Label diffic = new Label(5, (options.length*d+1), difficul[d%difficul.length]);
+				sheet.addCell(diffic);
+				for(int j=0;j<countKonwledge*count*difficul.length;j++){
+					Label konw = new Label(2, options.length*j+1, "知识点"+(j/count+1/difficul.length)+"");
+					sheet.addCell(konw);
+					for(int i=1;i<((count+1)*countKonwledge-2)*difficul.length;i++){
+						Number serial = new Number(0, 1+(i-1)*options.length, i);
+						Label cont = new Label(1, 1+(i-1)*options.length,"我是单选题的第"+i+"题，知识点"+(j/count+1)+"");
+						sheet.addCell(serial);
+						sheet.addCell(cont);
+					}
 				}
 			}
+			
 				
-				for(int k=0;k<(count)*options.length*3;k++){
+				for(int k=0;k<(count)*options.length*countKonwledge*difficul.length;k++){
 					Label opt = new Label(3, k+1, options[k%options.length]);
 					if(k%options.length == 2){
 						Label ans = new Label(4, k+1, "答案是我是我就是我！！！");
